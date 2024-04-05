@@ -4,4 +4,6 @@ export interface createCourseRequestType{
     title: string
     description: string
     category: Category
+    price: number
+    currency: string
 }

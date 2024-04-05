@@ -24,6 +24,8 @@ model Course {
   id          String       @id @default(uuid()) @map("id")
   title       String
   description String
+  price       Int
+  currency    String
   category    Category
   user        User         @relation(fields: [user_id], references: [id])
   user_id     String
