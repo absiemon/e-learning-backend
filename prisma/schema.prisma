@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(uuid()) @map("id")
+  username      String       @unique
+  name          String
+  email         String       @unique
+  password      String
+  profile_image String?
+  created_at    DateTime     @default(now()) @map("created_at")
+  Course        Course[]
+  Review        Review[]
+  Enrollment    Enrollment[]
+}
+
+model Course {
+  id          String       @id @default(uuid()) @map("id")
+  title       String
+  description String
+  category    Category
+  user        User         @relation(fields: [user_id], references: [id])
+  user_id     String
+  created_at  DateTime     @default(now()) @map("created_at")
+  Review      Review[]
+  Lesson      Lesson[]
+  Enrollment  Enrollment[]
+  Video       Video[]
+}
+
+model Review {
+  id          String   @id @default(uuid()) @map("id")
+  description String?
+  stars       Float
+  user        User     @relation(fields: [user_id], references: [id])
+  user_id     String
+  course      Course   @relation(fields: [course_id], references: [id])
+  course_id   String
+  created_at  DateTime @default(now()) @map("created_at")
+}
+
+model Lesson {
+  id            String   @id @default(uuid()) @map("id")
+  description   String
+  lesson_number Int
+  course        Course   @relation(fields: [course_id], references: [id])
+  course_id     String
+  created_at    DateTime @default(now()) @map("created_at")
+  Video         Video[]
+}
+
+model Video {
+  id           String   @id @default(uuid()) @map("id")
+  description  String
+  poster_url   String?  @unique
+  video_url    String   @unique
+  video_number Int
+  lesson       Lesson   @relation(fields: [lesson_id], references: [id])
+  lesson_id    String
+  course       Course   @relation(fields: [course_id], references: [id])
+  course_id    String
+  created_at   DateTime @default(now()) @map("created_at")
+}
+
+model Enrollment {
+  id         String   @id @default(uuid()) @map("id")
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+  course     Course   @relation(fields: [course_id], references: [id])
+  created_at DateTime @default(now()) @map("created_at")
+  course_id  String
+}
+
+enum Category {
+  ComputerScience
+  Arts
+  Engineering
+  Science
+  Law
+  Medical
+}
