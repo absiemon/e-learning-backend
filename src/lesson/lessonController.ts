@@ -93,8 +93,7 @@ export const getAllLessons = async (req: RequestWithUser, res: Response) => {
     }
 }
 
-//api to edit the lesson description. To edit the lesson_number you need to delete the lesson and then create a new one (because updating lesson might give conflicts).
-
+//api to edit the lesson description
 export const updateLesson = async (req: RequestWithUser, res: Response) => {
     const lesson_id = req.params.id;
     const { description, course_id } = req.body;

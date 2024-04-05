@@ -13,4 +13,6 @@ router.use('/review', reviewRouter);
 
 router.use('/lesson', reviewRouter);
 
+router.use('/video', reviewRouter);
+
 export default router;
