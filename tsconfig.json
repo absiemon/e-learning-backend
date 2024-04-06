@@ -19,7 +19,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "declaration": true,
-    "noEmit": true,
+    "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true
   },
   "ts-node": {
