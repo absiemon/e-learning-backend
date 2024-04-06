@@ -7,3 +7,11 @@ export interface createCourseRequestType{
     price: number
     currency: string
 }
+
+export interface updateCourseReqType{
+    title?: string
+    description?: string
+    category?: Category
+    price?: number
+    currency?: string
+}

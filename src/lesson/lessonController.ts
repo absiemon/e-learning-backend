@@ -29,7 +29,7 @@ export const createLesson = async (req: RequestWithUser, res: Response) => {
         }
         //you can only create lesson if you are the creator of the course
         const user_id = req.user?.id as string;
-        if(!areYouACreatorOfThisCourse(user_id, course_id)){
+        if(!await areYouACreatorOfThisCourse(user_id, course_id)){
             return res.status(400).json({error: "you are not the authorize to create lesson."});
         }
 
@@ -71,7 +71,7 @@ export const getAllLessons = async (req: RequestWithUser, res: Response) => {
 
         //you can only get all lessons if you are the creator of the course
         const user_id = req.user?.id as string;
-        if(!areYouACreatorOfThisCourse(user_id, course_id)){
+        if(!await areYouACreatorOfThisCourse(user_id, course_id)){
             return res.status(400).json({error: "you are not the authorize to get the lessons."});
         }
 
@@ -107,7 +107,7 @@ export const updateLesson = async (req: RequestWithUser, res: Response) => {
         //you can only update lesson if you are the creator of the course
         const user_id = req.user?.id as string;
 
-        if(!areYouACreatorOfThisCourse(user_id, course_id)){
+        if(!await areYouACreatorOfThisCourse(user_id, course_id)){
             return res.status(400).json({error: "you are not the authorize to update the lessons."});
         }
 
@@ -143,7 +143,7 @@ export const deleteLesson = async (req: RequestWithUser, res: Response) => {
         //you can only delete lesson if you are the creator of the course
         const user_id = req.user?.id as string;
                 
-        if(!areYouACreatorOfThisCourse(user_id, course_id)){
+        if(!await areYouACreatorOfThisCourse(user_id, course_id)){
             return res.status(400).json({error: "you are not the authorize to delete the lessons."});
         }
 

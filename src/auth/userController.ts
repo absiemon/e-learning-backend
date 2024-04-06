@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 import { generateToken } from './generateAccessToken.ts';
 import { LoginRequestBody, RegisterRequestBody, updateProfileRequestBody } from './types.ts';
 import { RequestWithUser } from '../middleware/verifyToken.ts';
+import { sendEmail } from '../middleware/sendEmail.ts';
 const prisma = new PrismaClient();
 
 //API for User Registration 
@@ -63,8 +64,8 @@ export const registerUser = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        console.error('Error registering user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 };
 
@@ -101,8 +102,7 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.json({ data: user, accessToken: token });
 
     } catch (error) {
-        console.error('Error logging in:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 };
 
@@ -116,7 +116,7 @@ export const updateUser = async (req: RequestWithUser, res: Response) => {
     const dataToUpdate : updateProfileRequestBody = req.body;
 
     try {
-        const updatedUser = await prisma.user.update({
+        await prisma.user.update({
             where: {
                 id: userId,
             },
@@ -124,12 +124,21 @@ export const updateUser = async (req: RequestWithUser, res: Response) => {
                ...dataToUpdate
             },
         });
+
+        //sending email
+        const payload={
+            to: req.user.email,
+            subject: 'Profile updation email',
+            html: '<p>Congrats! <strong>Your profile has been updated</strong>!</p>'
+        }
+        await sendEmail(payload)
+
         return res.status(200).json({
             message: "Profile updated successfully!"
         });
 
     } catch (error) {
-        console.error('Error updating user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error', details: error });
+
     }
 };

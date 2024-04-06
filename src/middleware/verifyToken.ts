@@ -21,6 +21,9 @@ export const verifyToken = (req: RequestWithUser, res: Response, next: NextFunct
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload
+        if(!decoded){
+            return res.status(401).json({ error: 'Unauthorized: User not authenticated' });
+        }
         req.user = decoded;
         next();
     } catch (error) {

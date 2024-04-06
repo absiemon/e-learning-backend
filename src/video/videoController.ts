@@ -17,7 +17,7 @@ export const createVideo = async (req: RequestWithUser, res: Response) => {
         }
          //you can only create video for this lesson if you are the creator of the course
          const user_id = req.user?.id as string;
-         if(!areYouACreatorOfThisCourse(user_id, course_id)){
+         if(!await areYouACreatorOfThisCourse(user_id, course_id)){
              return res.status(400).json({error: "you are not the authorize to create video for this lesson."});
          }
 
@@ -64,7 +64,7 @@ export const updateVideo = async (req: RequestWithUser, res: Response) => {
         }
         //you can only edit the video for this lesson if you are the creator of the course
         const user_id = req.user?.id as string;
-        if(!areYouACreatorOfThisCourse(user_id, course_id)){
+        if(!await areYouACreatorOfThisCourse(user_id, course_id)){
             return res.status(400).json({error: "you are not the authorize to edit this video for this lesson."});
         }
 
@@ -98,7 +98,7 @@ export const deleteVideo = async (req: RequestWithUser, res: Response) => {
         }
         //you can only edit the video for this lesson if you are the creator of the course
         const user_id = req.user?.id as string;
-        if(!areYouACreatorOfThisCourse(user_id, course_id)){
+        if(!await areYouACreatorOfThisCourse(user_id, course_id)){
             return res.status(400).json({error: "you are not the authorize to edit this video for this lesson."});
         }
         
