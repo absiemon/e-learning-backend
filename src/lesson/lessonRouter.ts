@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/create', verifyToken, createLesson);
 router.get('/get-all', verifyToken, getAllLessons);
-router.put('/:id', verifyToken, updateLesson);
+router.put('/update/:id', verifyToken, updateLesson);
 router.delete('/delete', verifyToken, deleteLesson);
 
 export default router;

@@ -276,8 +276,6 @@ export const getAllAvailableCourse = async (req: Request, res: Response) => {
 export const updateCourse = async (req: RequestWithUser, res: Response) => {
     const course_id = req.params.id;
     const data = req.body as updateCourseReqType;
-    console.log(course_id)
-    console.log(data)
 
     try {
         //check if the video id and course id are there
@@ -352,7 +350,7 @@ export const deleteCourse = async (req: RequestWithUser, res: Response) => {
             },
         });
 
-        return res.status(204).send();
+        return res.status(200).json({message: "Deleted Successfully!"});
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error', details: error });
 

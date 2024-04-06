@@ -5,7 +5,7 @@ import { verifyToken } from '../middleware/verifyToken.ts';
 const router = express.Router();
 
 router.post('/create', verifyToken, createVideo);
-router.put('/:id', verifyToken, updateVideo);
+router.put('/update/:id', verifyToken, updateVideo);
 router.delete('/delete', verifyToken, deleteVideo);
 
 export default router;

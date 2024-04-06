@@ -27,10 +27,11 @@ export const createLesson = async (req: RequestWithUser, res: Response) => {
         if (!course_id) {
             return res.status(400).json({ error: "course_id is required" });
         }
+
         //you can only create lesson if you are the creator of the course
         const user_id = req.user?.id as string;
         if(!await areYouACreatorOfThisCourse(user_id, course_id)){
-            return res.status(400).json({error: "you are not the authorize to create lesson."});
+            return res.status(400).json({error: "you are not authorize to create lesson!"});
         }
 
         //checking whether the given lesson number is already created for this course
@@ -54,8 +55,8 @@ export const createLesson = async (req: RequestWithUser, res: Response) => {
 
         return res.status(201).json(newLession);
     } catch (error) {
-        console.error('Error creating lession:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 };
 
@@ -88,12 +89,12 @@ export const getAllLessons = async (req: RequestWithUser, res: Response) => {
         return res.status(200).json(lessons)
 
     } catch (error) {
-        console.error('Error creating lession:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 }
 
-//api to edit the lesson description
+//api to edit the lesson description. For now no way to update lesson number 
 export const updateLesson = async (req: RequestWithUser, res: Response) => {
     const lesson_id = req.params.id;
     const { description, course_id } = req.body;
@@ -123,8 +124,8 @@ export const updateLesson = async (req: RequestWithUser, res: Response) => {
 
         return res.status(200).json({ message: "Successfully updated lesson description" });
     } catch (error) {
-        console.error('Error updating lession:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 };
 
@@ -154,10 +155,16 @@ export const deleteLesson = async (req: RequestWithUser, res: Response) => {
             },
         });
 
+        //if a lesson is deleted then also delete the videos of that lesson
+        await prisma.video.deleteMany({
+            where: {
+                lesson_id: lesson_id,
+            },
+        });
+
         return res.status(200).json({ message: "Successfully deleted the lesson!" });
 
     } catch (error) {
-        console.error('Error updating lession:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 }

@@ -15,6 +15,7 @@ export const createVideo = async (req: RequestWithUser, res: Response) => {
         if(!lesson_id || !course_id){
             return res.status(400).json({error: "lesson id and course id is required"});
         }
+
          //you can only create video for this lesson if you are the creator of the course
          const user_id = req.user?.id as string;
          if(!await areYouACreatorOfThisCourse(user_id, course_id)){
@@ -47,8 +48,8 @@ export const createVideo = async (req: RequestWithUser, res: Response) => {
 
         return res.status(201).json(newVideo);
     } catch (error) {
-        console.error('Error creating video:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error', details: error });
+
     }
 }
 
@@ -62,6 +63,7 @@ export const updateVideo = async (req: RequestWithUser, res: Response) => {
         if(!course_id || !video_id){
             return res.status(400).json({error: "video id and course id is required"});
         }
+        
         //you can only edit the video for this lesson if you are the creator of the course
         const user_id = req.user?.id as string;
         if(!await areYouACreatorOfThisCourse(user_id, course_id)){
@@ -82,8 +84,8 @@ export const updateVideo = async (req: RequestWithUser, res: Response) => {
 
         return res.status(200).json(updatedVideo);
     } catch (error) {
-        console.error('Error updating video:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+
+        return res.status(500).json({ error: 'Internal server error', details: error });
     }
 };
 
@@ -107,9 +109,9 @@ export const deleteVideo = async (req: RequestWithUser, res: Response) => {
                 id: video_id,
             },
         });
-        return res.status(204).send();
+        return res.status(200).json({message: "Successfully deleted!"});
     } catch (error) {
-        console.error('Error deleting video:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error', details: error });
+
     }
 };
