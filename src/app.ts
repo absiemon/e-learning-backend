@@ -32,6 +32,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use('/', (req, res)=>{
+  res.status(200).json('backend deployed')
+})
+
 //routes
 app.use('/v1', router);
 
