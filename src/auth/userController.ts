@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { generateToken } from './generateAccessToken.ts';
-import { LoginRequestBody, RegisterRequestBody, updateProfileRequestBody } from './types.ts';
+import { LoginRequestBody, RegisterRequestBody, updateProfileRequestBody, userFields } from './types.ts';
 import { RequestWithUser } from '../middleware/verifyToken.ts';
 import { sendEmail } from '../middleware/sendEmail.ts';
 const prisma = new PrismaClient();
@@ -48,6 +48,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 username: username,
                 ...restData
             },
+            select: userFields,
         });
 
         //generating token
@@ -98,8 +99,14 @@ export const loginUser = async (req: Request, res: Response) => {
             username: user.username,
         };
 
+        //excluding password
+        const newUser = {
+            id: user.id, name: user.name, username: user.username, 
+            email: user.email, created_at: user.created_at,
+        }
+
         const token: string = await generateToken(payload);
-        return res.json({ data: user, accessToken: token });
+        return res.json({ data: newUser, accessToken: token });
 
     } catch (error) {
         return res.status(500).json({ error: 'Internal server error', details: error });

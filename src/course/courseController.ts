@@ -4,6 +4,7 @@ import { Category, PrismaClient } from '@prisma/client';
 import { RequestWithUser } from '../middleware/verifyToken.ts';
 import { createCourseRequestType, updateCourseReqType } from './types.ts';
 import { areYouACreatorOfThisCourse } from '../lesson/lessonController.ts';
+import { userFields } from '../auth/types.ts';
 
 const prisma = new PrismaClient();
 
@@ -65,7 +66,9 @@ export const getCourse = async (req: RequestWithUser, res: Response) => {
                 id: course_id,
             },
             include: {
-                user: true // Including the creator details
+                user: {
+                    select: userFields
+                } // Including the creator details
             }
         });
 
@@ -79,7 +82,9 @@ export const getCourse = async (req: RequestWithUser, res: Response) => {
                 course_id: course_id,
             },
             include: {
-                user: true
+                user: {
+                    select: userFields
+                } 
             }
         });
 

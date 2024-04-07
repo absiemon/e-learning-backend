@@ -15,3 +15,12 @@ export interface updateProfileRequestBody{
     email?: string;
     profile_image?: string;
 }
+
+export const userFields = {
+    id: true,
+    name: true,
+    email: true,
+    profile_image: true,
+    created_at: true,
+    username: true
+}

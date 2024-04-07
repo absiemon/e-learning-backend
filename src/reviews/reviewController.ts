@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { RequestWithUser } from '../middleware/verifyToken.ts';
 import { createReviewReqType, updateReviewReqType } from './types.ts';
+import { userFields } from '../auth/types.ts';
 
 const prisma = new PrismaClient();
 
@@ -90,7 +91,9 @@ export const getReviews = async (req: Request, res: Response) => {
                 course_id: courseId,
             },
             include:{
-                user: true
+                user: {
+                    select: userFields
+                } 
             },
             take: pageSize,
             skip: (page - 1) * pageSize,

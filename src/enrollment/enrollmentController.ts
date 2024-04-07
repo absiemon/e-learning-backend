@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { RequestWithUser } from '../middleware/verifyToken.ts';
 import { sendEmail } from '../middleware/sendEmail.ts';
+import { userFields } from '../auth/types.ts';
 
 const prisma = new PrismaClient();
 
@@ -42,7 +43,9 @@ export const enrollInCourse = async (req: RequestWithUser, res: Response) => {
                 id: course_id
             },
             include:{
-                user: true
+                user: {
+                    select: userFields
+                } 
             }
         })
 
@@ -100,10 +103,14 @@ export const getAllEnrolledCourse = async (req: RequestWithUser, res: Response) 
             include: {
                 course: {
                     include: {
-                        user: true, // Including the user details who created this course
+                        user: {
+                            select: userFields
+                        }  // Including the user details who created this course
                     },
                 },
-                user: true, // Including the user details who has enrolled in this course
+                user: {
+                    select: userFields
+                }  // Including the user details who has enrolled in this course
             },
             skip: (page - 1) * pageSize,
             take: pageSize,
@@ -152,7 +159,9 @@ export const getAllUserEnrolledInCourse = async (req: Request, res: Response) =>
             },
             include: {
                 course: true,
-                user: true,
+                user: {
+                    select: userFields
+                }
             },
             skip: (page - 1) * pageSize,
             take: pageSize,
